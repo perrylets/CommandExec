@@ -5,7 +5,7 @@ public class EnvironmentTests
   [Fact(DisplayName = "Run shell command")]
   public void ShellCommandTest()
   {
-    Command command = new Command("echo") { "test" };
+    Command command = new Command("\"echo test\"");
     command.RedirectStdOut().RedirectStdErr();
     Command shellCommand = Command.Shell(command);
 
