@@ -15,10 +15,7 @@ Task dotnetTask = dotnet.RunAsync(); // Runs asynchronously.
 Console.WriteLine("Dotnet help running...");
 await dotnetTask;
 
-_ = Command.Shell(dotnet); // Runs the command in a shell. cmd.exe on Windows, bash on Linux/macOS.
-(Task otherTask, Command shellCommand) = Command.ShellAsync(dotnet); // Runs asynchronously in a shell.
-Console.WriteLine("Dotnet help running...");
-await task;
+Command = Command.Shell("dotnet", "--help"); // Runs the command in a shell. cmd.exe on Windows, bash on Linux/macOS.
 ```
 
 Check more information about the `Command` class in the docs (no docs yet) or the doc comments.
