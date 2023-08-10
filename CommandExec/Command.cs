@@ -10,7 +10,7 @@ namespace CommandExec
   public class Command : IEnumerable
   {
     #region Fields
-    internal string args;
+    string args;
     internal readonly Process process;
     static readonly PlatformID os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? PlatformID.Win32NT : PlatformID.Unix;
     #endregion
@@ -87,35 +87,13 @@ namespace CommandExec
     /// <param name="command">The command to run in the shell.</param>
     /// <param name="args">Additional arguments passed to the shell command.</param>
     /// <returns>The command used to run the shell.</returns>
-    public static Command Shell(Command command, params string[] args)
+    public static Command Shell(params string[] args)
     {
-      (string shell, string shellArg) shellCommand = os == PlatformID.Unix ? ("bash", "-c") : ("cmd.exe", "/C");
-      var shell = new Command(shellCommand.shell, command.process.StartInfo.WorkingDirectory)
-        .AddArg(shellCommand.shellArg)
-        .RedirectStdOut(command.process.StartInfo.RedirectStandardOutput)
-        .RedirectStdIn(command.process.StartInfo.RedirectStandardInput)
-        .RedirectStdErr(command.process.StartInfo.RedirectStandardOutput);
+      (string shellCommand, string shellArg) = os == PlatformID.Unix ? ("bash", "-c") : ("cmd.exe", "/C");
+      return new Command(shellCommand)
+        .AddArg(shellArg)
+        .AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
 
-      shell.Run(command.process.StartInfo.FileName, command.args, string.Join(" ", args));
-      return shell;
-    }
-
-    /// <summary>
-    /// Runs a command asynchronously inside a shell. CMD on WIndows and Bash everywhere else.
-    /// </summary>
-    /// <param name="command">The command to run in the shell.</param>
-    /// <param name="args">Additional arguments passed to the shell command.</param>
-    /// <returns>The task for asynchronous process and the command used to run the shell.</returns>
-    public static (Task task, Command shellCommand) ShellAsync(Command command, params string[] args)
-    {
-      (string shell, string shellArg) shellCommand = os == PlatformID.Unix ? ("bash", "-c") : ("cmd.exe", "/C");
-      Command shell = new Command(shellCommand.shell, command.process.StartInfo.WorkingDirectory)
-        .AddArg(shellCommand.shellArg)
-        .RedirectStdOut(command.process.StartInfo.RedirectStandardOutput)
-        .RedirectStdIn(command.process.StartInfo.RedirectStandardInput)
-        .RedirectStdErr(command.process.StartInfo.RedirectStandardOutput);
-
-      return (shell.RunAsync(command.process.StartInfo.FileName, command.args, string.Join(" ", args)), shell);
     }
 
     /// <summary>

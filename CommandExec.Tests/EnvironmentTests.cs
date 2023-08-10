@@ -5,13 +5,16 @@ public class EnvironmentTests
   [Fact(DisplayName = "Run shell command")]
   public void ShellCommandTest()
   {
-    Command command = new Command("\"echo test\"");
-    command.RedirectStdOut().RedirectStdErr();
-    Command shellCommand = Command.Shell(command);
+    Command shell = Command.Shell("echo test");
+
+    shell
+      .RedirectStdOut()
+      .RedirectStdErr()
+      .Run();
 
     #region Assertions
-    string STDOut = shellCommand.STDOut.ReadToEnd().TrimEnd();
-    string STDErr = shellCommand.STDErr.ReadToEnd();
+    string STDOut = shell.STDOut.ReadToEnd().TrimEnd();
+    string STDErr = shell.STDErr.ReadToEnd();
 
     Assert.Equal("test", STDOut);
     Assert.Equal(string.Empty, STDErr);
