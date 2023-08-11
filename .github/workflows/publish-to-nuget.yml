@@ -1,0 +1,27 @@
+# https://stackoverflow.com/a/74951756/17338243
+
+name: Publish to NuGet
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  test-on-linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Build
+      run: dotnet build -c Release
+    - name: Test
+      run: dotnet test -c Release --no-build --verbosity normal
+    - name: Pack
+      run: dotnet pack  -c Release CommandExec/CommandExec.csproj --no-build --output .
+    - name: Publish to NuGet
+      run: dotnet nuget push *.nupkg --api-key ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
