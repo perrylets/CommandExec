@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build-on-windows:
+  test-on-windows:
 
     runs-on: windows-latest
 
@@ -23,7 +23,7 @@ jobs:
     - name: Run Tests
       run: dotnet test --verbosity normal
 
-  build-on-linux:
+  test-on-linux:
 
     runs-on: ubuntu-latest
 
@@ -35,8 +35,8 @@ jobs:
         dotnet-version: 7.0.x
     - name: Run Tests
       run: dotnet test --verbosity normal
-      
-  build-on-mac:
+
+  test-on-mac:
 
     runs-on: macos-latest
 
