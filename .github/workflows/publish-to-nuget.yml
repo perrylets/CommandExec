@@ -7,7 +7,7 @@ on:
     types: [published]
 
 jobs:
-  test-on-linux:
+  publish:
 
     runs-on: ubuntu-latest
 
