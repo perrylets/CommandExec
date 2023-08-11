@@ -5,7 +5,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <Authors>Perry</Authors>
     <PackageDescription>Simple wrapper for System.Diagnostics.Process</PackageDescription>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <PackageId>Perry.CommandExec</PackageId>
     <PackageIcon>assets/icon.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/perrylets/CommandExec/main/assets/icon.png</PackageIconUrl>
