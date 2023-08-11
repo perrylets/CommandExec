@@ -12,7 +12,7 @@ namespace CommandExec
     #region Fields
     string args;
     internal readonly Process process;
-    static readonly PlatformID os = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? PlatformID.Win32NT : PlatformID.Unix;
+    static readonly bool isUnix = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     #endregion
 
     #region Standard Streams
@@ -89,10 +89,15 @@ namespace CommandExec
     /// <returns>The command used to run the shell.</returns>
     public static Command Shell(params string[] args)
     {
-      (string shellCommand, string shellArg) = os == PlatformID.Unix ? ("bash", "-c") : ("cmd.exe", "/C");
-      return new Command(shellCommand)
-        .AddArg(shellArg)
-        .AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
+      (string shellCommand, string shellArg) = isUnix ? ("bash", "-c") : ("cmd.exe", "/C");
+      Command shell = new Command(shellCommand)
+        .AddArg(shellArg);
+
+      if (isUnix)
+      {
+        return shell.AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
+      }
+      return shell.AddArg(args);
 
     }
 
@@ -104,10 +109,10 @@ namespace CommandExec
     /// <remarks>
     /// <see cref="Add"/> is an alias for <see cref="AddArg"/>.
     /// </remarks>
-    public Command AddArg(string str)
+    public Command AddArg(params string[] args)
     {
-      string roughArgs = args + $" {str}";
-      args = roughArgs.Trim();
+      string roughArgs = this.args + $" {string.Join(" ", args)}";
+      this.args = roughArgs.Trim();
       return this;
     }
 
@@ -164,7 +169,7 @@ namespace CommandExec
     /// <remarks>
     /// <see cref="Add"/> is an alias for <see cref="AddArg"/>.
     /// </remarks>
-    public Command Add(string str)
+    public Command Add(params string[] str)
     {
       return AddArg(str);
     }

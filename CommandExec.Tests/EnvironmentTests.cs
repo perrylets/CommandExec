@@ -14,7 +14,7 @@ public class EnvironmentTests
 
     #region Assertions
     string STDOut = shell.STDOut.ReadToEnd().TrimEnd();
-    string STDErr = shell.STDErr.ReadToEnd();
+    string STDErr = shell.STDErr.ReadToEnd().TrimEnd();
 
     Assert.Equal("test", STDOut);
     Assert.Equal(string.Empty, STDErr);
