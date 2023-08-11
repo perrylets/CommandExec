@@ -4,11 +4,12 @@
     <OutputType>Library</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <Authors>Perry</Authors>
+    <PackageDescription>Simple wrapper for System.Diagnostics.Process</PackageDescription>
     <Version>1.0.0</Version>
     <PackageId>Perry.CommandExec</PackageId>
     <PackageIcon>assets/icon.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/perrylets/CommandExec/main/assets/icon.png</PackageIconUrl>
-    <PackageDescription>Simple wrapper for System.Diagnostics.Process</PackageDescription>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/perrylets/CommandExec</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <ImplicitUsings>disable</ImplicitUsings>
@@ -21,6 +22,7 @@
 
   <ItemGroup>
     <Content Include="../assets/**" PackagePath="assets" />
+    <Content Include="../README.md" />
   </ItemGroup>
 
 </Project>

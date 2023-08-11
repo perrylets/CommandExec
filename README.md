@@ -18,4 +18,4 @@ await dotnetTask;
 Command = Command.Shell("dotnet", "--help"); // Runs the command in a shell. cmd.exe on Windows, bash on Linux/macOS.
 ```
 
-Check more information about the `Command` class in the [Wiki (WIP)](https://github.com/perrylets/CommandExec/wiki) (no docs yet) or the doc comments.
+Check more information about the `Command` class in the [Wiki (empty for now)](https://github.com/perrylets/CommandExec/wiki) or the doc comments.
