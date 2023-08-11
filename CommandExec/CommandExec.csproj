@@ -3,11 +3,24 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <Authors>Perry</Authors>
+    <Version>1.0.0</Version>
+    <PackageId>Perry.CommandExec</PackageId>
+    <PackageIcon>assets/icon.png</PackageIcon>
+    <PackageIconUrl>https://raw.githubusercontent.com/perrylets/CommandExec/main/assets/icon.png</PackageIconUrl>
+    <PackageDescription>Simple wrapper for System.Diagnostics.Process</PackageDescription>
+    <RepositoryUrl>https://github.com/perrylets/CommandExec</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>CommandExec</RootNamespace>
     <PublishRelease>true</PublishRelease>
+    <PackRelease>true</PackRelease>
     <NoWarn>IDE1006;IDE0090</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="../assets/**" PackagePath="assets" />
+  </ItemGroup>
 
 </Project>
