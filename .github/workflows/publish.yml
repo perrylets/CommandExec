@@ -22,6 +22,6 @@ jobs:
     - name: Test
       run: dotnet test -c Release --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack  -c Release CommandExec/CommandExec.csproj --no-build --output .
+      run: dotnet pack /p:PackageVersion=${{github.event.release.tag_name}} -c Release CommandExec/CommandExec.csproj --no-build --output .
     - name: Publish to NuGet
-      run: dotnet nuget push *.nupkg --api-key ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push *.nupkg -k ${{secrets.NUGET_API_KEY}} -s https://api.nuget.org/v3/index.json
