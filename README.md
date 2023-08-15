@@ -15,8 +15,8 @@ Task dotnetTask = dotnet.RunAsync(); // Runs asynchronously.
 Console.WriteLine("Dotnet help running...");
 await dotnetTask;
 
-Command shell = Command.Shell("dotnet", "--help"); // Creates the command for a shell. PowerShell on Windows, BASH on Linux/macOS.
-shell.Run(); // Passing args with `Run` for shell command is not recommended.
+Command shell = Command.Shell("dotnet", "--help"); // Creates the shell command. PowerShell on Windows, BASH on Linux/macOS.
+shell.Run(); // Passing args with `Run` for shell commands is not recommended.
 ```
 
 Check more information about the `Command` class in the [Wiki (empty for now)](https://github.com/perrylets/CommandExec/wiki) or the doc comments.
