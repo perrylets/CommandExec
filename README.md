@@ -8,7 +8,7 @@ for some reason.)
 
 ```cs
 using CommandExec;
-// Initializing the Command class. Check the wiki comments for more options.
+// Initializing the Command class. Check the wiki (WIP) for more options.
 Command dotnet = new Command("dotnet") { "--help" };
 dotnet.Run(); // Runs "dotnet --help".
 Task dotnetTask = dotnet.RunAsync(); // Runs asynchronously.
@@ -19,4 +19,4 @@ Command shell = Command.Shell("dotnet", "--help"); // Creates the shell command.
 shell.Run(); // Passing args with `Run` for shell commands is not recommended.
 ```
 
-Check more information about the `Command` class in the [Wiki (empty for now)](https://github.com/perrylets/CommandExec/wiki) or the doc comments.
+Check more information about the `Command` class in the [Wiki (WIP)](https://github.com/perrylets/CommandExec/wiki) or the doc comments.
