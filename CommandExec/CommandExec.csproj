@@ -5,9 +5,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <Authors>Perry</Authors>
     <PackageDescription>Simple wrapper for System.Diagnostics.Process</PackageDescription>
-    <Version>1.0.1</Version>
     <PackageId>Perry.CommandExec</PackageId>
-    <PackageIcon>assets/icon.png</PackageIcon>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://raw.githubusercontent.com/perrylets/CommandExec/main/assets/icon.png</PackageIconUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/perrylets/CommandExec</RepositoryUrl>
@@ -21,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="../assets/**" PackagePath="assets" />
-    <Content Include="../README.md" PackagePath="./" />
+    <None Include="../assets/icon.png" Pack="true" PackagePath="\" />
+    <None Include="../README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
