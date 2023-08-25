@@ -18,4 +18,11 @@ public class EnvironmentTests
     // string STDErr = shell.STDErr.ReadToEnd().TrimEnd();
     // Assert.Equal(string.Empty, STDErr);
   }
+
+  [Fact(DisplayName = "Check if command exists")]
+  public void CommandExistsTest()
+  {
+    Assert.True(CommandUtils.CommandExists("type"));
+    Assert.False(CommandUtils.CommandExists("fake-test-command-that-is-not-real"));
+  }
 }
