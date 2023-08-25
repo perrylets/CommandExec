@@ -14,7 +14,7 @@ namespace CommandExec
     #region Fields
     string args;
     internal readonly Process process;
-    static readonly bool isUnix = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    internal static readonly bool isUnix = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     #endregion
 
     #region Standard Streams
