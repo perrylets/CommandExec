@@ -7,18 +7,18 @@ namespace CommandExec
   {
     public static bool CommandExists(string command)
     {
-      if (File.Exists(command))
-        return true;
-
-      string values = Environment.GetEnvironmentVariable("PATH") ?? throw new Exception("PATH variable not set");
-      foreach (var path in values.Split(Path.PathSeparator))
+      Command cmd;
+      if (Command.isUnix)
       {
-        string fullPath = Path.Combine(path, command);
-        if (File.Exists(fullPath))
-          return true;
+        cmd = Command.Shell($"command -v {command} &> /dev/null && echo true").RedirectStdOut();
+      }
+      else
+      {
+        cmd = Command.Shell($"if (Get-Command -Name {command} -ErrorAction SilentlyContinue) {{echo true}}").RedirectStdOut();
       }
 
-      return false;
+      cmd.Run();
+      return cmd.STDOut.ReadToEnd().ReplaceLineEndings("") == "true";
     }
   }
 }
