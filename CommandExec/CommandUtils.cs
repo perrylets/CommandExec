@@ -14,7 +14,7 @@ namespace CommandExec
       }
       else
       {
-        cmd = Command.Shell($"Get-Command -Name {command} -ErrorAction SilentlyContinue | $null")
+        cmd = Command.Shell($"Get-Command -Name {command} -ErrorAction SilentlyContinue > $null")
           .RedirectStdOut()
           .RedirectStdErr()
           .RedirectStdIn();
