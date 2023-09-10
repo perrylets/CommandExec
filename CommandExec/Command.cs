@@ -47,11 +47,9 @@ namespace CommandExec
       process = new Process();
       process.StartInfo.FileName = command;
 
-      if (cwd is not null)
-        process.StartInfo.WorkingDirectory = cwd;
-      else
-        process.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+      process.StartInfo.WorkingDirectory = cwd ?? Directory.GetCurrentDirectory();
       process.StartInfo.CreateNoWindow = true;
+      process.StartInfo.UseShellExecute = false;
       process.StartInfo.RedirectStandardOutput = redirectSTDOut;
       process.StartInfo.RedirectStandardInput = redirectSTDIn;
       process.StartInfo.RedirectStandardError = redirectSTDErr;
