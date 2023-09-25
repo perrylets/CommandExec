@@ -2,7 +2,7 @@ namespace CommandExec
 {
   public static class CommandUtils
   {
-    public static bool CommandExists(string command)
+    public static bool Exists(string command)
     {
       Command cmd;
       if (Command.isUnix)
