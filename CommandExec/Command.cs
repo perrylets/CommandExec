@@ -15,7 +15,6 @@ namespace CommandExec
     #region Fields
     string args;
     internal readonly Process process;
-    internal static readonly bool isUnix = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     #endregion
 
     #region Properties
@@ -122,10 +121,14 @@ namespace CommandExec
     /// <returns>The command used to run the shell.</returns>
     public static Command Shell(params string[] args)
     {
-      (string shellCommand, string shellArg) = isUnix ? ("/bin/sh", "-c") : ("powershell", "-Command");
-      Command shell = new Command(shellCommand)
-        .AddArg(shellArg);
+      (string shellCommand, string shellArg) =
+#if !WINDOWS
+      ("/bin/sh", "-c");
+#else
+      ("powershell", "-Command");
+#endif
 
+      Command shell = new Command(shellCommand).AddArg(shellArg);
       return shell.AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
     }
 

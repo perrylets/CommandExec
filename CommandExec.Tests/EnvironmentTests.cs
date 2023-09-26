@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace CommandExec.Tests;
 
 public class EnvironmentTests
@@ -20,6 +22,12 @@ public class EnvironmentTests
   [Fact(DisplayName = "Check if command exists")]
   public void CommandExistsTest()
   {
+    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+    {
+      Command cmd = Command.Shell("file", "/bin/sh").RedirectStdOut();
+      cmd.Run();
+      Assert.Equal("/bin/sh: symbolic link to", cmd.stdOut.ReadToEnd()[..25]);
+    }
     Assert.True(CommandUtils.Exists("type"));
     Assert.False(CommandUtils.Exists("fake-test-command-that-is-not-real"));
   }

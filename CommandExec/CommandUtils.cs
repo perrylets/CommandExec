@@ -5,23 +5,15 @@ namespace CommandExec
     public static bool Exists(string command)
     {
       Command cmd;
-      if (Command.isUnix)
-      {
-        cmd = Command.Shell($"command -v {command} &> /dev/null").RedirectStdOut()
-          .RedirectStdOut()
-          .RedirectStdErr()
-          .RedirectStdIn();
-      }
-      else
-      {
-        cmd = Command.Shell($"Get-Command -Name {command} -ErrorAction SilentlyContinue > $null")
-          .RedirectStdOut()
-          .RedirectStdErr()
-          .RedirectStdIn();
-      }
+#if !WINDOWS
+      cmd = Command.Shell($"command -v {command}").RedirectStdOut()
+#else
+      cmd = Command.Shell($"Get-Command -Name {command} -ErrorAction SilentlyContinue > $null")
+#endif
+      .RedirectStdOut().RedirectStdErr().RedirectStdIn();
 
       cmd.Run();
-      return cmd.process.ExitCode == 0;
+      return !cmd.hasError;
     }
   }
 }
