@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
@@ -17,19 +18,39 @@ namespace CommandExec
     internal static readonly bool isUnix = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     #endregion
 
-    #region Standard Streams
+    #region Properties
     /// <summary>
     /// Gets the <see cref="StreamReader"/> for the Standard Output stream.
     /// </summary>
-    public StreamReader STDOut => process.StandardOutput;
+    public StreamReader stdOut => process.StandardOutput;
     /// <summary>
     /// Gets the <see cref="StreamWriter"/> for the Standard Input stream.
     /// </summary>
-    public StreamWriter STDIn => process.StandardInput;
+    public StreamWriter stdIn => process.StandardInput;
     /// <summary>
     /// Gets the <see cref="StreamReader"/> for the Standard Error stream.
     /// </summary>
-    public StreamReader STDErr => process.StandardError;
+    public StreamReader stdErr => process.StandardError;
+    /// <summary>
+    /// Gets the exit code of the process.
+    /// </summary>
+    public int exitCode => process.ExitCode;
+    /// <summary>
+    /// Gets if the process had an error during execution.
+    /// </summary>
+    public bool hasError => exitCode != 0;
+    /// <summary>
+    /// Executed when the process exits.
+    /// </summary>
+    public event Action<Process>? onExit;
+    /// <summary>
+    /// Gets the id of the process.
+    /// </summary>
+    public int id => process.Id;
+    /// <summary>
+    /// Gets the start time of the process.
+    /// </summary>
+    public DateTime startTime => process.StartTime;
     #endregion
 
     #region Functions
@@ -38,15 +59,15 @@ namespace CommandExec
     /// </summary>
     /// <param name="command">The file to run.</param>
     /// <param name="cwd">The working directory of the process. If null, defaults to the current working directory.</param>
-    /// <param name="redirectSTDOut">Whether the textual output of an application is written to <see cref="STDOut"/>.</param>
-    /// <param name="redirectSTDIn">Wether the input for an application is read from <see cref="STDIn"/>.</param>
-    /// <param name="redirectSTDErr">Whether the error output of an application is written to <see cref="STDErr"/>.</param>
+    /// <param name="redirectSTDOut">Whether the textual output of an application is written to <see cref="stdOut"/>.</param>
+    /// <param name="redirectSTDIn">Wether the input for an application is read from <see cref="stdIn"/>.</param>
+    /// <param name="redirectSTDErr">Whether the error output of an application is written to <see cref="stdErr"/>.</param>
     /// <param name="args">The process arguments.</param>
     public Command(string command, string? cwd = null, bool redirectSTDOut = false, bool redirectSTDIn = false, bool redirectSTDErr = false, params string[] args)
     {
       process = new Process();
       process.StartInfo.FileName = command;
-
+      process.Exited += OnExit;
       process.StartInfo.WorkingDirectory = cwd ?? Directory.GetCurrentDirectory();
       process.StartInfo.CreateNoWindow = true;
       process.StartInfo.UseShellExecute = false;
@@ -82,29 +103,21 @@ namespace CommandExec
     }
 
     /// <summary>
-    /// Runs a command inside a shell. CMD on WIndows and Bash everywhere else.
+    /// Runs the process.
     /// </summary>
-    /// <param name="command">The command to run in the shell.</param>
-    /// <param name="args">Additional arguments passed to the shell command.</param>
-    /// <returns>The command used to run the shell.</returns>
-    public static Command Shell(params string[] args)
+    /// <returns>
+    /// The process instance.
+    /// </returns>
+    public Process RawStart()
     {
-      (string shellCommand, string shellArg) = isUnix ? ("bash", "-c") : ("powershell", string.Empty);
-      Command shell = new Command(shellCommand)
-        .AddArg(shellArg);
-
-      if (isUnix)
-      {
-        return shell.AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
-      }
-      return shell.AddArg(args);
-
+      process.Start();
+      return process;
     }
 
     /// <summary>
     /// Adds a argument to the command.
     /// </summary>
-    /// <param name="str">The argument to add.</param>
+    /// <param name="args">The argument to add.</param>
     /// <returns>The command instance (for chaining).</returns>
     /// <remarks>
     /// <see cref="Add"/> is an alias for <see cref="AddArg"/>.
@@ -128,9 +141,9 @@ namespace CommandExec
     }
 
     /// <summary>
-    /// Sets whether the textual output of an application is written to <see cref="STDOut"/>. 
+    /// Sets whether the textual output of an application is written to <see cref="stdOut"/>. 
     /// </summary>
-    /// <param name="redirect">Whether the textual output of an application is written to <see cref="STDOut"/>.</param>
+    /// <param name="redirect">Whether the textual output of an application is written to <see cref="stdOut"/>.</param>
     /// <returns>The command instance (for chaining).</returns>
     public Command RedirectStdOut(bool redirect = true)
     {
@@ -139,9 +152,9 @@ namespace CommandExec
     }
 
     /// <summary>
-    /// Sets whether the input for an application is read from <see cref="STDIn"/>.
+    /// Sets whether the input for an application is read from <see cref="stdIn"/>.
     /// </summary>
-    /// <param name="redirect">Whether the input for an application is read from <see cref="STDIn"/>.</param>
+    /// <param name="redirect">Whether the input for an application is read from <see cref="stdIn"/>.</param>
     /// <returns>The command instance (for chaining).</returns>
     public Command RedirectStdIn(bool redirect = true)
     {
@@ -150,14 +163,21 @@ namespace CommandExec
     }
 
     /// <summary>
-    /// Sets whether the error output of an application is written to <see cref="STDErr"/>. 
+    /// Sets whether the error output of an application is written to <see cref="stdErr"/>. 
     /// </summary>
-    /// <param name="redirect">Whether the error output of an application is written to <see cref="STDErr"/>.</param>
+    /// <param name="redirect">Whether the error output of an application is written to <see cref="stdErr"/>.</param>
     /// <returns>The command instance (for chaining).</returns>
     public Command RedirectStdErr(bool redirect = true)
     {
       process.StartInfo.RedirectStandardError = redirect;
       return this;
+    }
+    #endregion
+
+    #region Private Functions
+    void OnExit(object? sender, EventArgs e)
+    {
+      onExit?.Invoke(process);
     }
     #endregion
 

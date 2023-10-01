@@ -2,26 +2,38 @@ namespace CommandExec
 {
   public static class CommandUtils
   {
-    public static bool CommandExists(string command)
+    /// <summary>
+    /// Runs a command inside a shell. CMD on WIndows and Bash everywhere else.
+    /// </summary>
+    /// <param name="command">The command to run in the shell.</param>
+    /// <param name="args">Additional arguments passed to the shell command.</param>
+    /// <returns>The command used to run the shell.</returns>
+    public static Command Shell(params string[] args)
+    {
+      (string shellCommand, string shellArg) = Command.isUnix ?
+      ("/bin/sh", "-c") :
+      ("powershell", "-Command");
+
+      Command shell = new Command(shellCommand).AddArg(shellArg);
+      return shell.AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
+    }
+
+    public static bool Exists(string command)
     {
       Command cmd;
+
       if (Command.isUnix)
       {
-        cmd = Command.Shell($"command -v {command} &> /dev/null").RedirectStdOut()
-          .RedirectStdOut()
-          .RedirectStdErr()
-          .RedirectStdIn();
-      }
-      else
-      {
-        cmd = Command.Shell($"Get-Command -Name {command} -ErrorAction SilentlyContinue > $null")
-          .RedirectStdOut()
-          .RedirectStdErr()
-          .RedirectStdIn();
+        cmd = Shell($"command", "-v", command).RedirectStdOut().RedirectStdErr()
+        .RedirectStdOut().RedirectStdErr();
+        cmd.Run();
+        return !cmd.hasError;
       }
 
+      cmd = Shell("Get-Command", "-Name", command, "-ErrorAction", "Stop")
+        .RedirectStdOut().RedirectStdErr();
       cmd.Run();
-      return cmd.process.ExitCode == 0;
+      return !cmd.hasError;
     }
   }
 }

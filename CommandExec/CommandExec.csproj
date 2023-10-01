@@ -16,7 +16,7 @@
     <RootNamespace>CommandExec</RootNamespace>
     <PublishRelease>true</PublishRelease>
     <PackRelease>true</PackRelease>
-    <NoWarn>IDE1006;IDE0090</NoWarn>
+    <NoWarn>$(NoWarn);IDE1006;IDE0090</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
