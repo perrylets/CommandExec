@@ -7,14 +7,13 @@ public class EnvironmentTests
   [Fact(DisplayName = "Run shell command")]
   public void ShellCommandTest()
   {
-    Command shell = Command.Shell("echo", "test");
+    Command shell = CommandUtils.Shell("echo", "test");
     shell
       .RedirectStdOut()
       .RedirectStdErr()
       .Run();
 
-    string STDOut = shell.stdOut.ReadToEnd().TrimEnd();
-    Assert.Equal("test", STDOut);
+    Assert.Equal("test", shell.stdOut.ReadToEnd().TrimEnd());
     Assert.Equal(0, shell.exitCode);
     Assert.False(shell.hasError);
   }
@@ -24,7 +23,7 @@ public class EnvironmentTests
   {
     if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
-      Command cmd = Command.Shell("file", "/bin/sh").RedirectStdOut();
+      Command cmd = CommandUtils.Shell("file", "/bin/sh").RedirectStdOut();
       cmd.Run();
       Assert.Equal("/bin/sh: symbolic link to", cmd.stdOut.ReadToEnd()[..25]);
     }

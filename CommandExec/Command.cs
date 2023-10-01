@@ -15,6 +15,7 @@ namespace CommandExec
     #region Fields
     string args;
     internal readonly Process process;
+    internal static readonly bool isUnix = !RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     #endregion
 
     #region Properties
@@ -111,25 +112,6 @@ namespace CommandExec
     {
       process.Start();
       return process;
-    }
-
-    /// <summary>
-    /// Runs a command inside a shell. CMD on WIndows and Bash everywhere else.
-    /// </summary>
-    /// <param name="command">The command to run in the shell.</param>
-    /// <param name="args">Additional arguments passed to the shell command.</param>
-    /// <returns>The command used to run the shell.</returns>
-    public static Command Shell(params string[] args)
-    {
-      (string shellCommand, string shellArg) =
-#if !WINDOWS
-      ("/bin/sh", "-c");
-#else
-      ("powershell", "-Command");
-#endif
-
-      Command shell = new Command(shellCommand).AddArg(shellArg);
-      return shell.AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
     }
 
     /// <summary>
