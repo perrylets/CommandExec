@@ -17,7 +17,15 @@ namespace CommandExec
       Command shell = new Command(shellCommand).AddArg(shellArg);
       return shell.AddArg($"\"{string.Join(" ", args).Replace("\"", "\\\"")}");
     }
-
+    /// <summary>
+    /// Checks if a command exists.
+    /// </summary>
+    /// <remarks>
+    /// This method will check for both shell commands and executable files.
+    /// There's a chance that the command exists, but needs to be executed through the shell.
+    /// </remarks>
+    /// <param name="command">The command to check</param>
+    /// <returns>Whether the command exists or not.</returns>
     public static bool Exists(string command)
     {
       Command cmd;
